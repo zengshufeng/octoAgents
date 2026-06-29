@@ -7,7 +7,7 @@ import { loadSceneConfig, buildSceneFromConfig } from '@/utils/sceneLoader'
 const container = ref<HTMLDivElement | null>(null)
 
 let renderer: THREE.WebGLRenderer | null = null
-let camera: THREE.PerspectiveCamera | null = null
+let camera: THREE.PerspectiveCamera | THREE.OrthographicCamera | null = null
 let scene: THREE.Scene | null = null
 let controls: OrbitControls | null = null
 let frameId = 0
@@ -15,8 +15,10 @@ let frameId = 0
 function onResize() {
   const el = container.value
   if (!el || !renderer || !camera) return
-  camera.aspect = el.clientWidth / el.clientHeight
-  camera.updateProjectionMatrix()
+  if (camera instanceof THREE.PerspectiveCamera) {
+    camera.aspect = el.clientWidth / el.clientHeight
+    camera.updateProjectionMatrix()
+  }
   renderer.setSize(el.clientWidth, el.clientHeight)
 }
 
